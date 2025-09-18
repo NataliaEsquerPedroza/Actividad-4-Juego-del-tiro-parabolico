@@ -1,6 +1,4 @@
 """
-Cannon (Free Python Games) - Versión modificada
-Cambios solicitados:
 1) Aumentar la velocidad del proyectil y de los balones.
 2) Hacer que el juego nunca termine: los balones que salen de ventana
    se reposicionan a la derecha con nueva altura.
@@ -10,19 +8,17 @@ from random import randrange
 from turtle import *
 from freegames import vector
 
-# ------------------- Parámetros ajustables -------------------
-TARGET_SPEED = 2.0      # Velocidad de los balones (antes ~0.5)
-GRAVITY = 0.35          # Gravedad del proyectil (igual que original)
-SHOT_SPEED_DIV = 18.0   # Divisor para velocidad inicial del disparo (antes 25 -> ahora más rápido)
-SPAWN_CHANCE = 40       # 1 de cada N frames aparece un target (igual que original)
-TICK_MS = 40            # Intervalo de actualización (antes 50 ms -> juego un poco más ágil)
+TARGET_SPEED = 2.0     
+GRAVITY = 0.35         
+SHOT_SPEED_DIV = 18.0  
+SPAWN_CHANCE = 40       
+TICK_MS = 40            
 TARGET_Y_RANGE = (-150, 150)
-BORDER = 200            # Semitamaño del mundo (coincide con inside())
+BORDER = 200           
 
-# ------------------- Estado del juego -------------------
-ball = vector(-200, -200)  # Proyectil (fuera de pantalla al inicio)
-speed = vector(0, 0)       # Velocidad del proyectil
-targets = []               # Lista de balones (targets)
+ball = vector(-200, -200)  
+speed = vector(0, 0)       
+targets = []              
 
 def tap(x, y):
     """Lanza el proyectil con mayor velocidad inicial."""
@@ -66,11 +62,10 @@ def move():
         target.x -= TARGET_SPEED
 
         # Si sale por la izquierda, reposicionar a la derecha (juego infinito)
-        if target.x < -BORDER - 10:  # pequeño margen
+        if target.x < -BORDER - 10: 
             target.x = BORDER
             target.y = randrange(*TARGET_Y_RANGE)
 
-    # Física del proyectil
     if inside(ball):
         speed.y -= GRAVITY
         ball.move(speed)
@@ -78,18 +73,14 @@ def move():
     # Colisiones: elimina targets golpeados
     vivos = []
     for target in targets:
-        # distancia > 13 => no colisiona (igual que original)
         if abs(target - ball) > 13:
             vivos.append(target)
-    # Mantener lista de los que sobrevivieron
     targets[:] = vivos
 
     draw()
 
-    # Nunca terminamos: siempre reprogramar siguiente frame
     ontimer(move, TICK_MS)
 
-# ------------------- Bootstrap del juego -------------------
 setup(420, 420, 370, 0)
 hideturtle()
 up()
